@@ -7,21 +7,44 @@
  */
 
 $postword = '
-   Lord ,今天孩子在撲了空的狀況下仍然在講道的過程趨於平靜,<br>
-   感謝你讓孩子在昨天的烤肉聚會和兩對夫婦與俊各交通,沒錯,<br>
-   孩子心中有許多擔憂和害怕,甚至是得失,彷彿狀況很棘手,<br>
-   唯一能相信的就是你與孩子同在,孩子未必做每件事都能得到正確的回應,<br>
-   但是孩子又不得不做,然而孩子若能順服Lord時間上的安排,<br>
-   那麼孩子也感謝主,因為你知道孩子什麼時候需要什麼,<br>
-   於是便將孩子所求的交給你,孩子願意等三個月,半年,一年<br>
-   
-   孩子將見證你帶來的看見或新眼光,<br>
-   一個更深境界的突破
+  xxx
 ';
 
-$keypoint = '了解獨立又美麗女性(時尚又聰穎的女性不打漆彈)';
-
+$keypoint = '察顏觀色系列 : 了解獨立又美麗女性(時尚又聰穎的女性不打漆彈)<br>';
+/*
+ *  廣度優先搜尋
+ * */
 echo $keypoint;
+
+
+
+$visited = array();
+
+$newArrTree = [];
+
+//foreach ($data_adjList as $key => $valueRow){
+//
+//    if(!in_array($key,$visited)){
+//        echo $key."<br>";
+//        array_push($visited,$key);
+//    }
+//     foreach ($valueRow as $item){
+//         if(!in_array($item,$visited)){
+//            echo $item."<br>";
+//             array_push($visited,$item);
+//             $queue->enqueue($item);
+//         }
+//     }
+//
+//}
+
+/**
+ * =====================================
+ *  以上錯誤
+ *=====================================
+ */
+$queue = new SplQueue();
+$start_loc =  'A';
 
 $data_adjList = [
     'A'=>['B','D'],
@@ -34,5 +57,87 @@ $data_adjList = [
     'H'=>['D','G']
 ];
 
+//foreach ($data_adjList[$start_loc] as $item) {
+//    //$newArrTree[0][$start_loc][$item] =& $data_adjList[$item];
+//    $newArrTree[0][$start_loc][$item]='path';
+//    echo $item;
+//}
 
-var_dump($data_adjList);
+//var_dump($data_adjList);
+function getDataByKey($start_loc){
+    global  $data_adjList;
+    $newArrTree[]=array();
+    foreach ($data_adjList[$start_loc] as $item) {
+         //echo $item;
+        for ($i=0;$i<count($data_adjList[$item]);$i++){
+            $temp_name = $data_adjList[$item][$i];
+              //echo $temp_name;
+            for($j=0;$j<count($data_adjList[$temp_name]);$j++){
+                $temp_inner_name = $data_adjList[$temp_name][$j];
+                //echo $temp_inner_name;
+                $newArrTree[0][$start_loc][$item][$temp_name][$temp_inner_name]='end!';
+            }
+
+        }
+    }
+    return $newArrTree;
+    //var_dump($data_adjList);
+}
+
+$result=getDataByKey($start_loc);
+
+
+
+echo "<br>BFS廣度遍歷順序 : ";
+
+echo "<pre>";
+print_r( $result );
+echo "</pre>";
+
+function queueIn($item){
+    global  $visited;
+    global $queue;
+    if(!in_array($item,$visited)){
+             array_push($visited,$item);
+        $queue->enqueue($item);
+    }
+
+}
+foreach ($result[0] as $key => $item){
+//    echo "key: ".$key;
+//    echo ",val: ".$item;
+//    echo "<hr>";
+    //print_r(array_keys($item));
+    echo "<br>";
+     $data_1 = $item;
+    queueIn($key);
+
+     foreach ($data_1 as $key => $item){
+//         echo "key: ".$key;
+//         echo ",val: ".$item;
+//         echo "<hr>";
+         //print_r(array_keys($item));
+         echo "<br>";
+         $data_2 = $item;
+          queueIn($key);
+
+         foreach ($data_2 as $key => $item){
+//             echo "key: ".$key;
+//             echo ",val: ".$item;
+//             echo "<hr>";
+             //print_r(array_keys($item));
+             echo "<br>";
+             $data_3 = $item;
+              queueIn($key);
+             foreach ($data_3 as $key => $item){
+//                 echo "key: ".$key;
+//                 echo ",val: ".$item;
+//                 echo "<hr>";
+                 //print_r(array_keys($item));
+                 $data_4 = $item;
+                  queueIn($key);
+             }
+         }
+     }
+}
+print_r($queue);
