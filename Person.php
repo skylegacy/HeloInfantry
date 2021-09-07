@@ -3,8 +3,8 @@
 
 class Person
 {
-    private $act;
-    private $name;
+    public $act;
+    public $name;
     private $age;
 
     function __get($property)
@@ -27,22 +27,48 @@ class Person
         }
     }
 
-    /*
-     * todo: __unset() , __isset()
-     */
-
+   // for isset 屬性重載
+    public function __isset($name)
+    {
+       echo "<br>__isset:".$name;
+    }
+    // for empty $name
+    public function  __unset($name)
+    {
+       echo "<br>__unset:".$name;
+    }
 
     public function __construct($age = 33)
     {
-        $this->age  = $age;
+
     }
 
+    public static function  __callStatic($func,$args)
+    {
+        echo "<br>__callStatic:".$func;
+    }
 
-    function __call($func,$args){
+    public  function __call($func,$args)
+    {
         if(method_exists($this,$func)){
             $args = implode(', ', $args);
             $this->$func($args[0]);
         }
+    }
+
+    public static function myCallbackMethod()
+    {
+        return 'Hello World!';
+    }
+
+    function fetchClassName()
+    {
+        return static::class;
+    }
+
+    function __invoke()
+    {
+
     }
 
     function getName()
